@@ -14,6 +14,7 @@ class _QuizScreenState extends State<QuizScreen> with SingleTickerProviderStateM
   List<Map<String, dynamic>> _questions = [];
   int _currentIndex = 0;
   int _score = 0;
+  int _streak = 0;
   bool _isLoading = true;
   bool _hasError = false;
   bool _showGlow = false;
@@ -73,11 +74,13 @@ class _QuizScreenState extends State<QuizScreen> with SingleTickerProviderStateM
     setState(() {
       _showGlow = true;
       _isCorrect = isCorrect;
+      if (isCorrect) {
+        _score++;
+        _streak++;
+      } else {
+        _streak = 0;
+      }
     });
-
-    if (isCorrect) {
-      _score++;
-    }
 
     await Future.delayed(const Duration(milliseconds: 1000));
     await _animationController.reverse();
@@ -222,6 +225,12 @@ class _QuizScreenState extends State<QuizScreen> with SingleTickerProviderStateM
                         ),
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -245,6 +254,34 @@ class _QuizScreenState extends State<QuizScreen> with SingleTickerProviderStateM
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.local_fire_department, color: Colors.red),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Streak: $_streak',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
                             ),
                           ),
                         ],
